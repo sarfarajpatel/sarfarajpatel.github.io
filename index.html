@@ -1,0 +1,239 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Sarfarajpatel.github.io by sarfarajpatel</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Sarfarajpatel.github.io</h1>
+        <p></p>
+
+
+        <p class="view"><a href="https://github.com/sarfarajpatel">View My GitHub Profile</a></p>
+
+      </header>
+      <section>
+        <h2>
+<a name="the-goal-of-this-machine-learning-exercise-is-to-predict-the-manner-in-which-the-participants-did-the-exercisethat-is-to-predict-the-classe-variable-found-in-the-training-set-the-prediction-model-will-then-be-used-to-predict-twenty-different-test-cases" class="anchor" href="#the-goal-of-this-machine-learning-exercise-is-to-predict-the-manner-in-which-the-participants-did-the-exercisethat-is-to-predict-the-classe-variable-found-in-the-training-set-the-prediction-model-will-then-be-used-to-predict-twenty-different-test-cases"><span class="octicon octicon-link"></span></a>The goal of this machine learning exercise is to predict the manner in which the participants did the exercise–that is, to #predict the “classe” variable found in the training set. The prediction model will then be used to predict twenty different #test cases,</h2>
+
+<h2>
+<a name="as-provided-in-the-testing-dataset" class="anchor" href="#as-provided-in-the-testing-dataset"><span class="octicon octicon-link"></span></a>as provided in the testing dataset.</h2>
+
+<h2>
+<a name="begin-by-loading-the-required-libraries-and-reading-in-the-training-and-testing-datasets-assigning-missing-values-to-entries-that-are-currently" class="anchor" href="#begin-by-loading-the-required-libraries-and-reading-in-the-training-and-testing-datasets-assigning-missing-values-to-entries-that-are-currently"><span class="octicon octicon-link"></span></a>Begin by loading the required libraries and reading in the training and testing datasets, assigning missing values to entries #that are currently</h2>
+
+<h2>
+<a name="na-or-blank" class="anchor" href="#na-or-blank"><span class="octicon octicon-link"></span></a>'NA' or blank.</h2>
+
+<p>library(corrplot)
+library(caret)</p>
+
+<p>wm &lt;- read.csv("pml-training.csv", header = TRUE, na.strings = c("NA", ""))
+wm_test &lt;- read.csv("pml-testing.csv", header = TRUE, na.strings = c("NA", ""))</p>
+
+<h2>
+<a name="columns-in-the-orignal-training-and-testing-datasets-that-are-mostly-filled-with-missing-values-are-then-removed-to-do-this-count-the-number-of-missing-values-in-each-column-of-the-full-training-dataset-we-use-those-sums-to-create-a-logical-variable-for-each-column-of-the-dataset" class="anchor" href="#columns-in-the-orignal-training-and-testing-datasets-that-are-mostly-filled-with-missing-values-are-then-removed-to-do-this-count-the-number-of-missing-values-in-each-column-of-the-full-training-dataset-we-use-those-sums-to-create-a-logical-variable-for-each-column-of-the-dataset"><span class="octicon octicon-link"></span></a>Columns in the orignal training and testing datasets that are mostly filled with missing values are then removed. To do this, #count the number of missing values in each column of the full training dataset. We use those sums to create a logical variable #for each column of the dataset.</h2>
+
+<h2>
+<a name="the-logical-variables-value-is-true-if-a-column-has-no-missing-values-ie-if-the-colsums--0-if-there-are-missing-values-in-the-column-the-logical-variables-value-corresponding-to-that-column-will-be-false" class="anchor" href="#the-logical-variables-value-is-true-if-a-column-has-no-missing-values-ie-if-the-colsums--0-if-there-are-missing-values-in-the-column-the-logical-variables-value-corresponding-to-that-column-will-be-false"><span class="octicon octicon-link"></span></a>The logical variable's value is 'TRUE' if a column has no missing values (i.e. if the colSums = 0). If there are missing #values in the column, the logical variable's value corresponding to that column will be 'FALSE'.</h2>
+
+<h2>
+<a name="applying-the-logical-variable-to-the-columns-of-the-training-and-testing-datasets-will-only-keep-those-columns-that-are" class="anchor" href="#applying-the-logical-variable-to-the-columns-of-the-training-and-testing-datasets-will-only-keep-those-columns-that-are"><span class="octicon octicon-link"></span></a>Applying the logical variable to the columns of the training and testing datasets will only keep those columns that are</h2>
+
+<h2>
+<a name="complete-note-this-is-a-way-of-applying-the-completecases-function-to-the-columns-of-a-dataset" class="anchor" href="#complete-note-this-is-a-way-of-applying-the-completecases-function-to-the-columns-of-a-dataset"><span class="octicon octicon-link"></span></a>complete. (Note: This is a way of applying the 'complete.cases' function to the columns of a dataset.)</h2>
+
+<h2>
+<a name="our-updated-training-dataset-now-has-fewer-variables-to-review-in-our-analysis-further-our-final-testing-dataset-has" class="anchor" href="#our-updated-training-dataset-now-has-fewer-variables-to-review-in-our-analysis-further-our-final-testing-dataset-has"><span class="octicon octicon-link"></span></a>Our updated training dataset now has fewer variables to review in our analysis. Further, our final testing dataset has</h2>
+
+<h2>
+<a name="consistent-columns-in-it-this-will-allow-the-fitted-model-to-be-applied-to-the-testing-dataset" class="anchor" href="#consistent-columns-in-it-this-will-allow-the-fitted-model-to-be-applied-to-the-testing-dataset"><span class="octicon octicon-link"></span></a>consistent columns in it. This will allow the fitted model to be applied to the testing dataset.</h2>
+
+<p>csums &lt;- colSums(is.na(wm))</p>
+
+<p>csums_log &lt;- (csums == 0)</p>
+
+<p>training_fewer_cols &lt;- wm[, (colSums(is.na(wm)) == 0)]</p>
+
+<p>wm_test &lt;- wm_test[, (colSums(is.na(wm)) == 0)]</p>
+
+<h2>
+<a name="create-another-logical-vector-in-order-to-delete-additional-unnecessary-columns-from-the-pared-down-training-and-testing" class="anchor" href="#create-another-logical-vector-in-order-to-delete-additional-unnecessary-columns-from-the-pared-down-training-and-testing"><span class="octicon octicon-link"></span></a>Create another logical vector in order to delete additional unnecessary columns from the pared-down training and testing</h2>
+
+<h2>
+<a name="datasets-column-names-in-the-dataset-containing-the-entries-shown-in-the-grepl-function-will-have-a-value-of-true" class="anchor" href="#datasets-column-names-in-the-dataset-containing-the-entries-shown-in-the-grepl-function-will-have-a-value-of-true"><span class="octicon octicon-link"></span></a>datasets. Column names in the dataset containing the entries shown in the 'grepl' function will have a value of 'TRUE'</h2>
+
+<h2>
+<a name="in-the-logical-vector-since-these-are-the-columns-we-want-to-remove-we-apply-the-negation-of-the-logical-vector-against" class="anchor" href="#in-the-logical-vector-since-these-are-the-columns-we-want-to-remove-we-apply-the-negation-of-the-logical-vector-against"><span class="octicon octicon-link"></span></a>in the logical vector. Since these are the columns we want to remove, we apply the negation of the logical vector against</h2>
+
+<h2>
+<a name="the-columns-of-our-dataset" class="anchor" href="#the-columns-of-our-dataset"><span class="octicon octicon-link"></span></a>the columns of our dataset.</h2>
+
+<p>del_cols_log &lt;- grepl("X|user_name|timestamp|new_window", colnames(training_fewer_cols))</p>
+
+<p>training_fewer_cols &lt;- training_fewer_cols[, !del_cols_log]</p>
+
+<p>wm_test_final &lt;- wm_test[, !del_cols_log]</p>
+
+<h2>
+<a name="we-now-split-the-updated-training-dataset-into-a-training-dataset-and-a-validation-dataset" class="anchor" href="#we-now-split-the-updated-training-dataset-into-a-training-dataset-and-a-validation-dataset"><span class="octicon octicon-link"></span></a>We now split the updated training dataset into a training dataset and a validation dataset.</h2>
+
+<h1>
+<a name="this-validation-dataset-will-allow-us-to-perform-cross-validation-when-developing-our-model" class="anchor" href="#this-validation-dataset-will-allow-us-to-perform-cross-validation-when-developing-our-model"><span class="octicon octicon-link"></span></a>This validation dataset will allow us to perform cross validation when developing our model.</h1>
+
+<p>inTrain = createDataPartition(y = training_fewer_cols$classe, p = 0.7, list = FALSE)</p>
+
+<p>small_train = training_fewer_cols[inTrain, ]</p>
+
+<p>small_valid = training_fewer_cols[-inTrain, ]</p>
+
+<h1>
+<a name="at-this-point-our-dataset-contains-54-variables-with-the-last-column-containing-the-classe-variable-we-are-trying-to" class="anchor" href="#at-this-point-our-dataset-contains-54-variables-with-the-last-column-containing-the-classe-variable-we-are-trying-to"><span class="octicon octicon-link"></span></a>At this point, our dataset contains 54 variables, with the last column containing the 'classe' variable we are trying to</h1>
+
+<h1>
+<a name="predict-we-begin-by-looking-at-the-correlations-between-the-variables-in-our-dataset" class="anchor" href="#predict-we-begin-by-looking-at-the-correlations-between-the-variables-in-our-dataset"><span class="octicon octicon-link"></span></a>predict. We begin by looking at the correlations between the variables in our dataset.</h1>
+
+<h1>
+<a name="we-may-want-to-remove-highly-correlated-predictors-from-our-analysis-and-replace-them-with-weighted-combinations-of-predictors-this-may-allow-a-more" class="anchor" href="#we-may-want-to-remove-highly-correlated-predictors-from-our-analysis-and-replace-them-with-weighted-combinations-of-predictors-this-may-allow-a-more"><span class="octicon octicon-link"></span></a>We may want to remove highly correlated predictors from our analysis and replace them with weighted combinations of predictors. This may allow a more</h1>
+
+<h1>
+<a name="complete-capture-of-the-information-available" class="anchor" href="#complete-capture-of-the-information-available"><span class="octicon octicon-link"></span></a>complete capture of the information available.</h1>
+
+<p>corMat &lt;- cor(small_train[, -54])</p>
+
+<p>corrplot(corMat, order = "FPC", method = "color", type = "lower", tl.cex = 0.8, tl.col = rgb(0, 0, 0))</p>
+
+<pre><code>![CorreplotGrid]([url=http://postimg.org/image/ukpfds1nb/][img=http://s15.postimg.org/ukpfds1nb/Correlation_Grid.jpg][/url])
+</code></pre>
+
+<h1>
+<a name="the-correlationgrid-shows-the-correlation-between-pairs-of-the-predictors-in-our-dataset-from-a-high-level-perspective-darker-blue" class="anchor" href="#the-correlationgrid-shows-the-correlation-between-pairs-of-the-predictors-in-our-dataset-from-a-high-level-perspective-darker-blue"><span class="octicon octicon-link"></span></a>The CorrelationGrid shows the correlation between pairs of the predictors in our dataset. From a high-level perspective darker #blue</h1>
+
+<h1>
+<a name="and-darker-red-squares-indicate-high-positive-and-high-negative-correlations-respectively-based-on-this-observation" class="anchor" href="#and-darker-red-squares-indicate-high-positive-and-high-negative-correlations-respectively-based-on-this-observation"><span class="octicon octicon-link"></span></a>and darker red squares indicate high positive and high negative correlations, respectively. Based on this observation,</h1>
+
+<h1>
+<a name="we-choose-to-implement-a-principal-components-analysis-to-produce-a-set-of-linearly-uncorrelated-variables" class="anchor" href="#we-choose-to-implement-a-principal-components-analysis-to-produce-a-set-of-linearly-uncorrelated-variables"><span class="octicon octicon-link"></span></a>we choose to implement a principal components analysis to produce a set of linearly uncorrelated variables</h1>
+
+<h1>
+<a name="to-use-as-our-predictors" class="anchor" href="#to-use-as-our-predictors"><span class="octicon octicon-link"></span></a>to use as our predictors.</h1>
+
+<p><em>Principal Components Analysis and Machine Learning</em></p>
+
+<h1>
+<a name="we-pre-process-our-data-using-a-principal-component-analysis-leaving-out-the-last-column-classe-after-pre-processing" class="anchor" href="#we-pre-process-our-data-using-a-principal-component-analysis-leaving-out-the-last-column-classe-after-pre-processing"><span class="octicon octicon-link"></span></a>We pre-process our data using a principal component analysis, leaving out the last column ('classe'). After pre-processing,</h1>
+
+<h1>
+<a name="we-use-the-predict-function-to-apply-the-pre-processing-to-both-the-training-and-validation-subsets-of-the-original-larger" class="anchor" href="#we-use-the-predict-function-to-apply-the-pre-processing-to-both-the-training-and-validation-subsets-of-the-original-larger"><span class="octicon octicon-link"></span></a>we use the 'predict' function to apply the pre-processing to both the training and validation subsets of the original larger</h1>
+
+<h1>
+<a name="training-dataset" class="anchor" href="#training-dataset"><span class="octicon octicon-link"></span></a>'training' dataset.</h1>
+
+<p>preProc &lt;- preProcess(small_train[, -54], method = "pca", thresh = 0.99)</p>
+
+<p>trainPC &lt;- predict(preProc, small_train[, -54])</p>
+
+<p>valid_testPC &lt;- predict(preProc, small_valid[, -54])</p>
+
+<h1>
+<a name="next-we-train-a-model-using-a-random-forest-approach-on-the-smaller-training-dataset-we-chose-to-specify-the-use-of-a" class="anchor" href="#next-we-train-a-model-using-a-random-forest-approach-on-the-smaller-training-dataset-we-chose-to-specify-the-use-of-a"><span class="octicon octicon-link"></span></a>Next, we train a model using a random forest approach on the smaller training dataset. We chose to specify the use of a</h1>
+
+<h1>
+<a name="cross-validation-method-when-applying-the-random-forest-routine-in-the-traincontrol-parameter-without-specifying-this" class="anchor" href="#cross-validation-method-when-applying-the-random-forest-routine-in-the-traincontrol-parameter-without-specifying-this"><span class="octicon octicon-link"></span></a>cross validation method when applying the random forest routine in the 'trainControl()' parameter. Without specifying this,</h1>
+
+<h1>
+<a name="the-default-method-bootstrapping-would-have-been-used-the-bootstrapping-method-seemed-to-take-a-lot-longer-to-complete" class="anchor" href="#the-default-method-bootstrapping-would-have-been-used-the-bootstrapping-method-seemed-to-take-a-lot-longer-to-complete"><span class="octicon octicon-link"></span></a>the default method (bootstrapping) would have been used. The bootstrapping method seemed to take a lot longer to complete,</h1>
+
+<h1>
+<a name="while-essentially-producing-the-same-level-of-accuracy" class="anchor" href="#while-essentially-producing-the-same-level-of-accuracy"><span class="octicon octicon-link"></span></a>while essentially producing the same level of 'accuracy'.</h1>
+
+<p>modelFit &lt;- train(small_train$classe ~ ., method = "rf", data = trainPC, trControl = trainControl(method = "cv",
+number = 4), importance = TRUE)</p>
+
+<h1>
+<a name="we-now-review-the-relative-importance-of-the-resulting-principal-components-of-the-trained-model-modelfit" class="anchor" href="#we-now-review-the-relative-importance-of-the-resulting-principal-components-of-the-trained-model-modelfit"><span class="octicon octicon-link"></span></a>We now review the relative importance of the resulting principal components of the trained model, 'modelFit'.</h1>
+
+<p>varImpPlot(modelFit$finalModel, sort = TRUE, type = 1, pch = 19, col = 1, cex = 1, 
+    main = "Importance of the Individual Principal Components")</p>
+
+<h1>
+<a name="as-you-look-from-the-top-to-the-bottom-on-the-y-axis-this-plot-shows-each-of-the-principal-components-in-order-from-most" class="anchor" href="#as-you-look-from-the-top-to-the-bottom-on-the-y-axis-this-plot-shows-each-of-the-principal-components-in-order-from-most"><span class="octicon octicon-link"></span></a>As you look from the top to the bottom on the y-axis, this plot shows each of the principal components in order from most</h1>
+
+<h1>
+<a name="important-to-least-important-the-degree-of-importance-is-shown-on-the-x-axisincreasing-from-left-to-right" class="anchor" href="#important-to-least-important-the-degree-of-importance-is-shown-on-the-x-axisincreasing-from-left-to-right"><span class="octicon octicon-link"></span></a>important to least important. The degree of importance is shown on the x-axis–increasing from left to right.</h1>
+
+<h1>
+<a name="therefore-points-high-and-to-the-right-on-this-graph-correspond-to-those-principal-components-that-are-especially-valuable" class="anchor" href="#therefore-points-high-and-to-the-right-on-this-graph-correspond-to-those-principal-components-that-are-especially-valuable"><span class="octicon octicon-link"></span></a>Therefore, points high and to the right on this graph correspond to those principal components that are especially valuable</h1>
+
+<h1>
+<a name="in-terms-of-being-able-to-classify-the-observed-training-data" class="anchor" href="#in-terms-of-being-able-to-classify-the-observed-training-data"><span class="octicon octicon-link"></span></a>in terms of being able to classify the observed training data.</h1>
+
+<p><strong>Cross Validation Testing and Out-of-Sample Error Estimate</strong></p>
+
+<h1>
+<a name="call-the-predict-function-again-so-that-our-trained-model-can-be-applied-to-our-cross-validation-test-dataset" class="anchor" href="#call-the-predict-function-again-so-that-our-trained-model-can-be-applied-to-our-cross-validation-test-dataset"><span class="octicon octicon-link"></span></a>Call the 'predict' function again so that our trained model can be applied to our cross validation test dataset.</h1>
+
+<h1>
+<a name="we-can-then-view-the-resulting-table-in-the-confusionmatrix-functions-output-to-see-how-well-the-model" class="anchor" href="#we-can-then-view-the-resulting-table-in-the-confusionmatrix-functions-output-to-see-how-well-the-model"><span class="octicon octicon-link"></span></a>We can then view the resulting table in the 'confusionMatrix' function's output to see how well the model</h1>
+
+<h1>
+<a name="predictedclassified-the-values-in-the-validation-test-set-ie-the-reference-values" class="anchor" href="#predictedclassified-the-values-in-the-validation-test-set-ie-the-reference-values"><span class="octicon octicon-link"></span></a>predicted/classified the values in the validation test set (i.e. the 'reference' values)</h1>
+
+<p>pred_valid_rf &lt;- predict(modelFit, valid_testPC)
+confus &lt;- confusionMatrix(small_valid$classe, pred_valid_rf)
+confus$table</p>
+
+<h1>
+<a name="the-estimated-out-of-sample-error-is-1000-minus-the-models-accuracy-the-later-of-which-is-provided-in-the-output" class="anchor" href="#the-estimated-out-of-sample-error-is-1000-minus-the-models-accuracy-the-later-of-which-is-provided-in-the-output"><span class="octicon octicon-link"></span></a>The estimated out-of-sample error is 1.000 minus the model's accuracy, the later of which is provided in the output</h1>
+
+<h1>
+<a name="of-the-confusionmatrix-or-more-directly-via-the-postresample-function" class="anchor" href="#of-the-confusionmatrix-or-more-directly-via-the-postresample-function"><span class="octicon octicon-link"></span></a>of the confusionmatrix, or more directly via the 'postresample' function.</h1>
+
+<p>accur &lt;- postResample(small_valid$classe, pred_valid_rf)</p>
+
+<p>model_accuracy &lt;- accur[[1]]</p>
+
+<p>model_accuracy</p>
+
+<p>out_of_sample_error &lt;- 1 - model_accuracy</p>
+
+<p>out_of_sample_error</p>
+
+<h1>
+<a name="the-estimated-accuracy-of-the-model-is-984-and-the-estimated-out-of-sample-error-based-on-our-fitted-model-applied-to" class="anchor" href="#the-estimated-accuracy-of-the-model-is-984-and-the-estimated-out-of-sample-error-based-on-our-fitted-model-applied-to"><span class="octicon octicon-link"></span></a>The estimated accuracy of the model is 98.4% and the estimated out-of-sample error based on our fitted model applied to</h1>
+
+<h1>
+<a name="the-cross-validation-dataset-is-16" class="anchor" href="#the-cross-validation-dataset-is-16"><span class="octicon octicon-link"></span></a>the cross validation dataset is 1.6%.</h1>
+
+<p><strong>Predicted Results</strong></p>
+
+<h1>
+<a name="finally-we-apply-the-pre-processing-to-the-original-testing-dataset-after-removing-the-extraneous-column-labeled" class="anchor" href="#finally-we-apply-the-pre-processing-to-the-original-testing-dataset-after-removing-the-extraneous-column-labeled"><span class="octicon octicon-link"></span></a>Finally, we apply the pre-processing to the original testing dataset, after removing the extraneous column labeled</h1>
+
+<h1>
+<a name="problem_id-column-54-we-then-run-our-model-against-the-testing-dataset-and-display-the-predicted-results" class="anchor" href="#problem_id-column-54-we-then-run-our-model-against-the-testing-dataset-and-display-the-predicted-results"><span class="octicon octicon-link"></span></a>'problem_id' (column 54). We then run our model against the testing dataset and display the predicted results.</h1>
+
+<p>testPC &lt;- predict(preProc, wm_test_final[, -54])</p>
+
+<p>pred_final &lt;- predict(modelFit, testPC)</p>
+
+<p>pred_final</p>
+      </section>
+      <footer>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+    
+  </body>
+</html>
